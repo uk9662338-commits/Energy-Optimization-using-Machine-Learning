@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Dashboard</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 30px;
+        }
+
+        h1{
+            text-align: center;
+            color: green;
+        }
+
+        .card{
+            background: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 10px;
+            font-size: 22px;
+        }
+
+        input{
+    width: 300px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+button{
+    padding: 12px 20px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<h1>Energy Optimization Dashboard</h1>
+
+<div class="card">
+
+<h2>Energy Consumption Prediction</h2>
+
+{% if result %}
+
+<p>
+Predicted Energy Consumption:
+{{ result.energy }} kWh
+</p>
+
+{% endif %}
+
+</div>
+
+<div class="card">
+
+<h2>Energy Optimization Suggestions</h2>
+
+{% if result %}
+
+<p>
+{{ result.suggestion }}
+</p>
+
+{% endif %}
+
+</div>
+
+<div class="card">
+    <h2>Usage Visualization</h2>
+
+<canvas id="energyChart" width="400" height="150"></canvas>
+</div>
+
+<div class="card">
+<div class="card">
+
+<h2>Electricity Bill Prediction</h2>
+
+{% if result %}
+
+<p>
+Estimated Bill: ₹ {{ result.bill }}
+</p>
+
+{% endif %}
+
+</div>
+    <h2>User Input Form</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+       <input type="text" name="appliance" placeholder="Appliance Name">
+
+<input type="number" name="hours" placeholder="Usage Hours">
+
+<input type="number" name="power" placeholder="Power Rating (Watts)">
+<button type="submit">
+Predict Energy
+</button>
+
+    </form>
+ 
+
+{% if result %}
+
+<h2>Prediction Result</h2>
+
+<p>
+Appliance: {{ result.appliance }}
+</p>
+
+<p>
+Estimated Energy Consumption: {{ result.energy }} kWh
+</p>
+
+<p>
+Peak Hour: {{ result.peak }}
+</p>
+
+<p>
+Status: {{ result.status }}
+</p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+    <h2>Peak Hour Detection</h2>
+
+    {% if result %}
+    <p>
+        Peak Usage Time:
+        {{ result.peak }}
+    </p>
+    {% endif %}
+</div>
+
+<div class="card">
+
+<h2>Anomaly Detection</h2>
+
+<p>
+Usage Status: {{ result.status }}
+</p>
+
+</div>
+
+<script>
+
+function showResult() {
+
+document.getElementById("result").style.display = "block";
+
+}
+
+</script>
+<script>
+const ctx = document.getElementById('energyChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Fan', 'AC', 'Light', 'TV'],
+        datasets: [{
+            label: 'Energy Usage (kWh)',
+            data: [2, 5, 1, 3],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+</body>
+</html>
